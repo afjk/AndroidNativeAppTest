@@ -1,6 +1,7 @@
 package com.example.androidnativeapptest
 
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
@@ -27,6 +28,16 @@ class MainActivity : AppCompatActivity() {
         // Set button click listener
         loadButton.setOnClickListener {
             loadUrl()
+        }
+
+        // Set Enter key listener for URL input
+        urlInput.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_GO) {
+                loadUrl()
+                true
+            } else {
+                false
+            }
         }
 
         // Load default URL

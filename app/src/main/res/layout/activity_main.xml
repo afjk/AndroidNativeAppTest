@@ -11,6 +11,7 @@
         android:layout_margin="16dp"
         android:hint="@string/url_hint"
         android:inputType="textUri"
+        android:imeOptions="actionGo"
         android:text="https://www.google.com"
         app:layout_constraintEnd_toStartOf="@+id/load_button"
         app:layout_constraintStart_toStartOf="parent"
