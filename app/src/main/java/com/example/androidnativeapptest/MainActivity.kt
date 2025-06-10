@@ -93,6 +93,19 @@ class MainActivity : AppCompatActivity() {
             return false
         }
         
+        @Suppress("DEPRECATION")
+        override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+            if (url == null) return false
+            
+            // Handle custom URL schemes (non-http/https)
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                return handleCustomUrlScheme(url)
+            }
+            
+            // Let WebView handle http/https URLs normally
+            return false
+        }
+        
         private fun handleCustomUrlScheme(url: String): Boolean {
             return try {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
