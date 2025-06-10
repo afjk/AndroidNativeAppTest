@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var urlInput: EditText
     private lateinit var loadButton: Button
+    private lateinit var backButton: Button
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         // Initialize views
         urlInput = findViewById(R.id.url_input)
         loadButton = findViewById(R.id.load_button)
+        backButton = findViewById(R.id.back_button)
         webView = findViewById(R.id.web_view)
 
         // Configure WebView
@@ -28,6 +30,13 @@ class MainActivity : AppCompatActivity() {
         // Set button click listener
         loadButton.setOnClickListener {
             loadUrl()
+        }
+
+        // Set back button click listener
+        backButton.setOnClickListener {
+            if (webView.canGoBack()) {
+                webView.goBack()
+            }
         }
 
         // Set Enter key listener for URL input
