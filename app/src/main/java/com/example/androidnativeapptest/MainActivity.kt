@@ -1,5 +1,7 @@
 package com.example.androidnativeapptest
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.webkit.WebView
@@ -11,23 +13,39 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var urlInput: EditText
     private lateinit var loadButton: Button
+    private lateinit var setHomeButton: Button
     private lateinit var webView: WebView
+    private lateinit var sharedPreferences: SharedPreferences
+    
+    private companion object {
+        const val PREFS_NAME = "WebViewPrefs"
+        const val HOME_URL_KEY = "home_url"
+        const val DEFAULT_URL = "https://www.google.com"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialize SharedPreferences
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         // Initialize views
         urlInput = findViewById(R.id.url_input)
         loadButton = findViewById(R.id.load_button)
+        setHomeButton = findViewById(R.id.set_home_button)
         webView = findViewById(R.id.web_view)
 
         // Configure WebView
         setupWebView()
 
-        // Set button click listener
+        // Set button click listeners
         loadButton.setOnClickListener {
             loadUrl()
+        }
+        
+        setHomeButton.setOnClickListener {
+            setHomeUrl()
         }
 
         // Set Enter key listener for URL input
@@ -40,8 +58,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Load default URL
-        loadUrl()
+        // Load home URL or default URL
+        loadHomeUrl()
     }
 
     private fun setupWebView() {
@@ -58,6 +76,26 @@ class MainActivity : AppCompatActivity() {
                 url
             }
             webView.loadUrl(finalUrl)
+        }
+    }
+    
+    private fun setHomeUrl() {
+        val currentUrl = webView.url
+        if (currentUrl != null) {
+            sharedPreferences.edit()
+                .putString(HOME_URL_KEY, currentUrl)
+                .apply()
+        }
+    }
+    
+    private fun loadHomeUrl() {
+        val homeUrl = sharedPreferences.getString(HOME_URL_KEY, null)
+        if (homeUrl != null) {
+            urlInput.setText(homeUrl)
+            webView.loadUrl(homeUrl)
+        } else {
+            urlInput.setText(DEFAULT_URL)
+            webView.loadUrl(DEFAULT_URL)
         }
     }
 
