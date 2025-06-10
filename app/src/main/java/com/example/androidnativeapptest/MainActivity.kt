@@ -110,13 +110,10 @@ class MainActivity : AppCompatActivity() {
             return try {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 // Check if there's an app that can handle this intent
-                if (intent.resolveActivity(packageManager) != null) {
+                try {
                     startActivity(intent)
-                } else {
-                    // No app found to handle this URL scheme
-                    Toast.makeText(this@MainActivity, 
-                        "No app found to handle this link: $url", 
-                        Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    // 何もしない（エラーを無視）
                 }
                 true
             } catch (e: Exception) {
