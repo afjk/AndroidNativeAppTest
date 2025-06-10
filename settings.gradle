@@ -1,2 +1,2 @@
-rootProject.name = "AndroidNativeAppTest"
+rootProject.name = "NativeApp"
 include ':app'

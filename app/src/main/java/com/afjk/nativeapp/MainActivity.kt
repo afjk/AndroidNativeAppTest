@@ -1,4 +1,4 @@
-package com.example.androidnativeapptest
+package com.afjk.nativeapp
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

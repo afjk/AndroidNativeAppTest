@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    namespace 'com.example.androidnativeapptest'
+    namespace 'com.afjk.nativeapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.androidnativeapptest"
+        applicationId "com.afjk.nativeapp"
         minSdk 21
         targetSdk 33
         versionCode 1
