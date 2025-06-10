@@ -1,13 +1,17 @@
 package com.example.androidnativeapptest
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -73,7 +77,43 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupWebView() {
         webView.settings.javaScriptEnabled = true
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = CustomWebViewClient()
+    }
+
+    private inner class CustomWebViewClient : WebViewClient() {
+        override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+            val url = request?.url?.toString() ?: return false
+            
+            // Handle custom URL schemes (non-http/https)
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                return handleCustomUrlScheme(url)
+            }
+            
+            // Let WebView handle http/https URLs normally
+            return false
+        }
+        
+        private fun handleCustomUrlScheme(url: String): Boolean {
+            return try {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                // Check if there's an app that can handle this intent
+                if (intent.resolveActivity(packageManager) != null) {
+                    startActivity(intent)
+                } else {
+                    // No app found to handle this URL scheme
+                    Toast.makeText(this@MainActivity, 
+                        "No app found to handle this link: $url", 
+                        Toast.LENGTH_LONG).show()
+                }
+                true
+            } catch (e: Exception) {
+                // Error creating or launching intent
+                Toast.makeText(this@MainActivity, 
+                    "Error handling link: $url", 
+                    Toast.LENGTH_LONG).show()
+                true
+            }
+        }
     }
 
     private fun loadUrl() {
