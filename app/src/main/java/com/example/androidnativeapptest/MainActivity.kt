@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var urlInput: EditText
     private lateinit var loadButton: Button
     private lateinit var setHomeButton: Button
+    private lateinit var backButton: Button
     private lateinit var webView: WebView
     private lateinit var sharedPreferences: SharedPreferences
     
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         urlInput = findViewById(R.id.url_input)
         loadButton = findViewById(R.id.load_button)
         setHomeButton = findViewById(R.id.set_home_button)
+        backButton = findViewById(R.id.back_button)
         webView = findViewById(R.id.web_view)
 
         // Configure WebView
@@ -46,6 +48,13 @@ class MainActivity : AppCompatActivity() {
         
         setHomeButton.setOnClickListener {
             setHomeUrl()
+        }
+
+        // Set back button click listener
+        backButton.setOnClickListener {
+            if (webView.canGoBack()) {
+                webView.goBack()
+            }
         }
 
         // Set Enter key listener for URL input
