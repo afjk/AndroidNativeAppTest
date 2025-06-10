@@ -49,4 +49,12 @@ class MainActivity : AppCompatActivity() {
             webView.loadUrl(finalUrl)
         }
     }
+
+    override fun onBackPressed() {
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
+    }
 }
