@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">AndroidNativeAppTest</string>
     <string name="hello_world">Hello World</string>
+    <string name="url_hint">URLを入力してください</string>
+    <string name="load_button">読み込み</string>
 </resources>
