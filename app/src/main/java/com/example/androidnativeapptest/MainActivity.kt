@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
     private lateinit var urlInput: EditText
@@ -129,13 +130,48 @@ class MainActivity : AppCompatActivity() {
     private fun loadUrl() {
         val url = urlInput.text.toString().trim()
         if (url.isNotEmpty()) {
-            val finalUrl = if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                "https://$url"
+            val finalUrl = if (isUrl(url)) {
+                // It looks like a URL, handle as before
+                if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                    "https://$url"
+                } else {
+                    url
+                }
             } else {
-                url
+                // It doesn't look like a URL, perform Google search
+                val encodedQuery = URLEncoder.encode(url, "UTF-8")
+                "https://www.google.com/search?q=$encodedQuery"
             }
             webView.loadUrl(finalUrl)
         }
+    }
+    
+    private fun isUrl(input: String): Boolean {
+        // If it contains spaces, it's likely a search query
+        if (input.contains(" ")) {
+            return false
+        }
+        
+        // If it already starts with http:// or https://, it's a URL
+        if (input.startsWith("http://") || input.startsWith("https://")) {
+            return true
+        }
+        
+        // If it contains a dot and doesn't look like a search query, treat as URL
+        // Simple heuristic: if it has a dot and no spaces, likely a domain
+        if (input.contains(".")) {
+            // Additional check: if it's just numbers and dots, might be an IP
+            // If it contains common TLD patterns or looks domain-like, treat as URL
+            return true
+        }
+        
+        // Special cases like localhost
+        if (input.equals("localhost", ignoreCase = true) || input.startsWith("localhost:")) {
+            return true
+        }
+        
+        // If it's just a single word without dots, treat as search query
+        return false
     }
     
     private fun setHomeUrl() {
